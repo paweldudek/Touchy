@@ -67,13 +67,6 @@ extension UITextField: Placeholderable, TextInsertable {
 extension UIControl: Tappable {
 
     public func specSimulateTap() {
-        print("\(allTargets)")
-        
-        let firstTarget = allTargets.first! as NSObject
-        
-        let obtainedActions = actions(forTarget: firstTarget, forControlEvent: .touchUpInside)
-        print("\(String(describing: obtainedActions))")
-        
         sendActions(for: .touchUpInside)
     }
 }
