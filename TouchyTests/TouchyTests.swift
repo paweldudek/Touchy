@@ -27,8 +27,10 @@ class TouchyTests: XCTestCase {
     // MARK: UIButton
 
     func testTapButton() {
-        let view = UIView(frame: .zero)
-        let button = UIButton(frame: .zero)
+        let frame = CGRect(x: 0, y: 0, width: 42, height: 42)
+        
+        let view = UIView(frame: frame)
+        let button = UIButton(frame: frame)
         
         button.setTitle("Fixture Title", for: .normal)
         button.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .touchUpInside)
@@ -65,8 +67,8 @@ class TouchyTests: XCTestCase {
         let button3 = UIButton(frame: .zero)
 
         button1.setTitle("Fixture Title 1", for: .normal)
-        button1.setTitle("Fixture Title 2", for: .normal)
-        button1.setTitle("Fixture Title 3", for: .normal)
+        button2.setTitle("Fixture Title 2", for: .normal)
+        button3.setTitle("Fixture Title 3", for: .normal)
         button1.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .touchUpInside)
 
         view.addSubview(button1)

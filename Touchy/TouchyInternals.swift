@@ -25,7 +25,7 @@ internal extension UIView {
         allSubviews.append(contentsOf: subviews)
         
         for subview in subviews {
-            allSubviews.append(contentsOf: subview.subviews)
+            allSubviews.append(contentsOf: subview.allSubviews())
         }
         
         return allSubviews
