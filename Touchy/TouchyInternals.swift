@@ -23,11 +23,11 @@ internal extension UIView {
     func allSubviews() -> [UIView] {
         var allSubviews: [UIView] = []
         allSubviews.append(contentsOf: subviews)
-        
+
         for subview in subviews {
             allSubviews.append(contentsOf: subview.allSubviews())
         }
-        
+
         return allSubviews
     }
 }

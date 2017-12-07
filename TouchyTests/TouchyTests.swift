@@ -28,35 +28,35 @@ class TouchyTests: XCTestCase {
 
     func testTapButton() {
         let frame = CGRect(x: 0, y: 0, width: 42, height: 42)
-        
+
         let view = UIView(frame: frame)
         let button = UIButton(frame: frame)
-        
+
         button.setTitle("Fixture Title", for: .normal)
         button.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .touchUpInside)
-        
+
         view.addSubview(button)
-        
+
         view.specTapElement(with: "Fixture Title")
-        
+
         XCTAssertTrue(captor.actionCalled, "It should have tapped the button")
     }
-    
+
     func testTapButtonInDeepHierarchy() {
         let view = UIView(frame: .zero)
         let secondView = UIView(frame: .zero)
         let thirdView = UIView(frame: .zero)
         let button = UIButton(frame: .zero)
-        
+
         button.setTitle("Fixture Title", for: .normal)
         button.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .touchUpInside)
-        
+
         view.addSubview(secondView)
         secondView.addSubview(thirdView)
         thirdView.addSubview(button)
-        
+
         view.specTapElement(with: "Fixture Title")
-        
+
         XCTAssertTrue(captor.actionCalled, "It should have tapped the button")
     }
 
@@ -100,6 +100,28 @@ class TouchyTests: XCTestCase {
         XCTAssertTrue(captor.actionCalled, "It should have tapped the first button")
     }
 
+    // MARK: Accessibility
+
+    func testTapButtonWithAccessibilityLabel() {
+        let view = UIView(frame: .zero)
+        let button1 = UIButton(frame: .zero)
+        let button2 = UIButton(frame: .zero)
+        let button3 = UIButton(frame: .zero)
+
+        button1.accessibilityLabel = "Fixture Accessibility Label"
+        button1.setTitle("Fixture Title", for: .normal)
+        button1.setTitle("Fixture Title", for: .normal)
+        button1.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .touchUpInside)
+
+        view.addSubview(button1)
+        view.addSubview(button2)
+        view.addSubview(button3)
+
+        view.specTapAccessibilityElement(with: "Fixture Accessibility Label")
+
+        XCTAssertTrue(captor.actionCalled, "It should have tapped the first button")
+    }
+
     // MARK: UITextField
 
     func testEnterText() {
@@ -115,21 +137,38 @@ class TouchyTests: XCTestCase {
         XCTAssertEqual(textField.text, "Fixture Text", "It should have tapped the button")
     }
 
+    func testEnterTextIntoAccessibilityElement() {
+        let view = UIView(frame: .zero)
+        let textField = UITextField(frame: .zero)
+
+        textField.accessibilityLabel = "Fixture Accessibility Label"
+
+        view.addSubview(textField)
+
+        view.specEnter(text: "Fixture Text", intoAccessibilityElementWith: "Fixture Accessibility Label")
+
+        XCTAssertEqual(textField.text, "Fixture Text", "It should have tapped the button")
+    }
+
     // MARK: UIBarButtonItem
-    
+
     func testBarButtonItem() {
-        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: captor, action: #selector(TargetActionCaptor.action))
-        
+        let barButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: captor,
+            action: #selector(TargetActionCaptor.action)
+        )
+
         barButtonItem.specSimulateTap()
-        
+
         XCTAssertTrue(captor.actionCalled, "It should have called the target with action")
     }
 }
 
 class TargetActionCaptor: NSObject {
-    
+
     var actionCalled = false
-    
+
     @objc func action() {
         actionCalled = true
     }
