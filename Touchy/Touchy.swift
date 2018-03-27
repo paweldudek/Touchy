@@ -82,6 +82,25 @@ public extension UIView {
 
         placeholderable.text = text
     }
+
+    func specTapTableViewCell(with title: String) {
+        guard let view: UITableView = specFindElement(eval: { _ in
+            return true
+        }) else {
+            return
+        }
+
+        guard let cell: UITableViewCell = specFindElement(
+            eval: { $0.textLabel?.text == title },
+            in: view.visibleCells
+        ) else {
+            return
+        }
+
+        if let indexPath = view.indexPath(for: cell) {
+            view.delegate?.tableView!(view, didSelectRowAt: indexPath)
+        }
+    }
 }
 
 extension UIButton: Titleable {

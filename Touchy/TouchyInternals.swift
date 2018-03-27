@@ -6,10 +6,16 @@
 //  Copyright © 2017 Pawel Dudek. All rights reserved.
 //
 
+import UIKit
+
 internal extension UIView {
 
     func specFindElement<T>(eval: ((T) -> Bool)) -> T? {
-        for itemCandidate in allSubviews() {
+        return specFindElement(eval: eval, in: allSubviews() + [self])
+    }
+
+    func specFindElement<T>(eval: ((T) -> Bool), in subviews: [UIView]) -> T? {
+        for itemCandidate in subviews {
             if let item = itemCandidate as? T {
                 if eval(item) {
                     return item

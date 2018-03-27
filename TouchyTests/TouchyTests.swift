@@ -163,6 +163,25 @@ class TouchyTests: XCTestCase {
 
         XCTAssertTrue(captor.actionCalled, "It should have called the target with action")
     }
+
+    // MARK: UITableView
+
+    func testTableView() {
+        let dataSource = DummyTableDelegateDataSource()
+        let tableView = UITableView(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 480)))
+        tableView.delegate = dataSource
+        tableView.dataSource = dataSource
+        tableView.layoutIfNeeded()
+
+        tableView.specTapTableViewCell(with: "Fixture Text 3")
+
+        guard let lastSelectedIndexPath = dataSource.lastSelectedIndexPath else {
+            XCTFail("No index path was recorded")
+            return
+        }
+
+        XCTAssertEqual(lastSelectedIndexPath, IndexPath(row: 3, section: 0))
+    }
 }
 
 class TargetActionCaptor: NSObject {
@@ -171,5 +190,24 @@ class TargetActionCaptor: NSObject {
 
     @objc func action() {
         actionCalled = true
+    }
+}
+
+class DummyTableDelegateDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
+
+    var lastSelectedIndexPath: IndexPath?
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 5
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(frame: .zero)
+        cell.textLabel?.text = "Fixture Text \(indexPath.row)"
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        lastSelectedIndexPath = indexPath
     }
 }
