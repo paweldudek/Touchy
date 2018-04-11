@@ -101,6 +101,25 @@ public extension UIView {
             view.delegate?.tableView!(view, didSelectRowAt: indexPath)
         }
     }
+
+    func specTapCollectionViewCell(with title: String) {
+        guard let view: UICollectionView = specFindElement(eval: { _ in
+            return true
+        }) else {
+            return
+        }
+
+        guard let cell: UICollectionViewCell & Titleable = specFindElement(
+            eval: { $0.title == title },
+            in: view.visibleCells
+        ) else {
+            return
+        }
+
+        if let indexPath = view.indexPath(for: cell) {
+            view.delegate?.collectionView!(view, didSelectItemAt: indexPath)
+        }
+    }
 }
 
 extension UIButton: Titleable {

@@ -182,6 +182,26 @@ class TouchyTests: XCTestCase {
 
         XCTAssertEqual(lastSelectedIndexPath, IndexPath(row: 3, section: 0))
     }
+
+    // MARK: UICollectionView
+
+    func testCollectionView() {
+        let dataSource = DummyCollectionViewDelegateDataSource()
+        let collectionView = UICollectionView(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 480)), collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.delegate = dataSource
+        collectionView.dataSource = dataSource
+        collectionView.register(DummyCollectionViewDelegateDataSource.TitleableCollectionViewCell, forCellWithReuseIdentifier: "Cell")
+        collectionView.layoutIfNeeded()
+
+        collectionView.specTapCollectionViewCell(with: "Fixture Text 3")
+
+        guard let lastSelectedIndexPath = dataSource.lastSelectedIndexPath else {
+            XCTFail("No index path was recorded")
+            return
+        }
+
+        XCTAssertEqual(lastSelectedIndexPath, IndexPath(row: 3, section: 0))
+    }
 }
 
 class TargetActionCaptor: NSObject {
@@ -208,6 +228,29 @@ class DummyTableDelegateDataSource: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        lastSelectedIndexPath = indexPath
+    }
+}
+
+class DummyCollectionViewDelegateDataSource: NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
+
+    class TitleableCollectionViewCell: UICollectionViewCell, Titleable {
+        var title: String?
+    }
+
+    var lastSelectedIndexPath: IndexPath?
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TitleableCollectionViewCell
+        cell.title = "Fixture Text \(indexPath.row)"
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         lastSelectedIndexPath = indexPath
     }
 }
