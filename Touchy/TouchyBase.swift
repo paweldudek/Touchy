@@ -8,9 +8,9 @@
 
 import UIKit
 
-internal extension UIView {
+public extension UIView {
 
-    func specFindElement<T>(eval: ((T) -> Bool)) -> T? {
+    func specFindElement<T>(eval: ((T) -> Bool) = { _ in return true }) -> T? {
         return specFindElement(eval: eval, in: allSubviews() + [self])
     }
 

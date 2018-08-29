@@ -103,9 +103,7 @@ public extension UIView {
     }
 
     func specTapCollectionViewCell(with title: String) {
-        guard let view: UICollectionView = specFindElement(eval: { _ in
-            return true
-        }) else {
+        guard let view: UICollectionView = specFindElement() else {
             return
         }
 

@@ -190,7 +190,7 @@ class TouchyTests: XCTestCase {
         let collectionView = UICollectionView(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 480)), collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.delegate = dataSource
         collectionView.dataSource = dataSource
-        collectionView.register(DummyCollectionViewDelegateDataSource.TitleableCollectionViewCell, forCellWithReuseIdentifier: "Cell")
+        collectionView.register(DummyCollectionViewDelegateDataSource.TitleableCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView.layoutIfNeeded()
 
         collectionView.specTapCollectionViewCell(with: "Fixture Text 3")
