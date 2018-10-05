@@ -31,7 +31,7 @@ public protocol Placeholderable: class {
 
 public protocol Tappable: class {
 
-    func specSimulateTap(with event: UIControlEvents)
+    func specSimulateTap(with event: UIControl.Event)
 }
 
 public extension Tappable {
@@ -53,7 +53,7 @@ public extension UIView {
         placeholderable.text = text
     }
 
-    func specTapElement(with title: String, event: UIControlEvents = .touchUpInside) {
+    func specTapElement(with title: String, event: UIControl.Event = .touchUpInside) {
         guard let titleable: (Titleable & Tappable) = specFindElement(eval: {
             return $0.title == title
         }) else {
@@ -63,7 +63,7 @@ public extension UIView {
         titleable.specSimulateTap(with: event)
     }
 
-    func specTapAccessibilityElement(with label: String, event: UIControlEvents = .touchUpInside) {
+    func specTapAccessibilityElement(with label: String, event: UIControl.Event = .touchUpInside) {
         guard let accessible: (Accessible & Tappable) = specFindElement(eval: {
             return $0.accessibilityLabel == label
         }) else {
@@ -133,7 +133,7 @@ extension UITextField: Placeholderable, TextInsertable {
 
 extension UIControl: Tappable {
 
-    public func specSimulateTap(with event: UIControlEvents) {
+    public func specSimulateTap(with event: UIControl.Event) {
         let objectTargets = allTargets.map({ $0 as NSObject })
 
         for target in objectTargets {
@@ -149,7 +149,7 @@ extension UIControl: Tappable {
 
 extension UIBarButtonItem: Tappable {
 
-    public func specSimulateTap(with event: UIControlEvents) {
+    public func specSimulateTap(with event: UIControl.Event) {
         guard let target = target, let action = action else {
             return
         }
