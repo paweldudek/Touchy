@@ -134,6 +134,9 @@ extension UITextField: Placeholderable, TextInsertable {
 extension UIControl: Tappable {
 
     public func specSimulateTap(with event: UIControl.Event) {
+        guard isEnabled else {
+            return
+        }
         let objectTargets = allTargets.map({ $0 as NSObject })
 
         for target in objectTargets {
