@@ -123,7 +123,7 @@ public extension UIView {
 extension UIButton: Titleable {
 
     public var title: String? {
-        return titleLabel?.text
+        return currentTitle
     }
 }
 
