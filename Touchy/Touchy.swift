@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public protocol TextInsertable: class {
+public protocol TextInsertable: AnyObject {
 
     var text: String? { get set }
 }
@@ -19,17 +19,17 @@ public protocol Accessible {
     var accessibilityLabel: String? { get set }
 }
 
-public protocol Titleable: class {
+public protocol Titleable: AnyObject {
 
     var title: String? { get }
 }
 
-public protocol Placeholderable: class {
+public protocol Placeholderable: AnyObject {
 
     var placeholder: String? { get }
 }
 
-public protocol Tappable: class {
+public protocol Tappable: AnyObject {
 
     func specSimulateTap(with event: UIControl.Event)
 }
@@ -123,7 +123,11 @@ public extension UIView {
 extension UIButton: Titleable {
 
     public var title: String? {
-        return currentTitle
+        var possibleTitles = [currentTitle, titleLabel?.text]
+        if #available(iOS 15.0, *) {
+            possibleTitles.append(configuration?.title)
+        }
+        return possibleTitles.compactMap { $0 }.first
     }
 }
 
