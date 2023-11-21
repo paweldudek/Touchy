@@ -182,7 +182,6 @@ extension UIBarButtonItem: Tappable {
         guard let target = target, let action = action else {
             if let control = customView as? UIControl {
                 control.specSimulateTap(with: event)
-                
             }
             return
         }
@@ -195,7 +194,7 @@ extension UIView: Accessible {
 
 }
 
-extension UIAction {
+public extension UIAction {
     func specTriggerAction() {
         let performWithSender = NSSelectorFromString("_performActionWithSender:")
         let performWithTarget = NSSelectorFromString("_performWithTarget:")
