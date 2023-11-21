@@ -118,6 +118,42 @@ public extension UIView {
             view.delegate?.collectionView!(view, didSelectItemAt: indexPath)
         }
     }
+
+    func specChangeTextFieldValue(with textFieldAccessibilityIdentifier: String, to text: String) {
+        let textField: UITextField? = specFindElement { view in
+            return view.accessibilityIdentifier == textFieldAccessibilityIdentifier
+        }
+        textField?.text = text
+        textField?.specSimulateTap(with: .editingChanged)
+    }
+
+    func specTapButton(with title: String, inCollectionViewCellWithTitle cellTitle: String) {
+        let cell: (UICollectionViewCell & Titleable)? = specFindElement { view in
+            return view.title == cellTitle
+        }
+        cell?.specTapElement(with: title)
+    }
+
+    func specTapTextViewLink(titled linkTitle: String) {
+        let textView: UITextView? = specFindElement { view in
+            return view.text?.contains(linkTitle) ?? false
+        }
+
+        if let textView = textView,
+            let text = textView.text,
+            let linkValue = textView.attributedText.attribute(
+                .link, at: NSString(string: text).range(of: linkTitle).lowerBound, effectiveRange: nil
+            ) as? String,
+            let url = URL(string: linkValue) {
+            let linkRange = NSString(string: text).range(of: linkTitle)
+            _ = textView.delegate?.textView?(
+                textView,
+                shouldInteractWith: url,
+                in: linkRange,
+                interaction: .invokeDefaultAction
+            )
+        }
+    }
 }
 
 extension UIButton: Titleable {
@@ -158,6 +194,9 @@ extension UIBarButtonItem: Tappable {
 
     public func specSimulateTap(with event: UIControl.Event) {
         guard let target = target, let action = action else {
+            if let control = customView as? UIControl {
+                control.specSimulateTap(with: event)
+            }
             return
         }
 
