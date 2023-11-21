@@ -42,6 +42,22 @@ class TouchyTests: XCTestCase {
         XCTAssertTrue(captor.actionCalled, "It should have tapped the button")
     }
 
+    func testTapButtonWithDifferentAction() {
+        let frame = CGRect(x: 0, y: 0, width: 42, height: 42)
+
+        let view = UIView(frame: frame)
+        let button = UIButton(frame: frame)
+
+        button.setTitle("Fixture Title", for: .normal)
+        button.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .valueChanged)
+
+        view.addSubview(button)
+
+        view.specTapElement(with: "Fixture Title")
+
+        XCTAssertFalse(captor.actionCalled, "It should not have called the targets action")
+    }
+
     func testTapButtonInDeepHierarchy() {
         let view = UIView(frame: .zero)
         let secondView = UIView(frame: .zero)
@@ -162,6 +178,28 @@ class TouchyTests: XCTestCase {
         barButtonItem.specSimulateTap()
 
         XCTAssertTrue(captor.actionCalled, "It should have called the target with action")
+    }
+
+    func testBarButtonItemWithCustomButtonViewWithTargetAction() {
+        let button = UIButton()
+        button.addTarget(captor, action: #selector(TargetActionCaptor.action), for: .touchUpInside)
+        let barButtonItem = UIBarButtonItem(customView: button)
+
+        barButtonItem.specSimulateTap()
+
+        XCTAssertTrue(captor.actionCalled, "It should have called the target with action")
+    }
+
+    func testBarButtonItemWithCustomButtonViewWithAction() {
+        var actionCalled = false
+        let button = UIButton(primaryAction: .init(handler: { _ in
+            actionCalled = true
+        }))
+        let barButtonItem = UIBarButtonItem(customView: button)
+
+        barButtonItem.specSimulateTap()
+
+        XCTAssertTrue(actionCalled, "It should have called the action")
     }
 
     // MARK: UITableView

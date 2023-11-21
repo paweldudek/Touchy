@@ -10,39 +10,32 @@ import Foundation
 import UIKit
 
 public protocol TextInsertable: AnyObject {
-
     var text: String? { get set }
 }
 
 public protocol Accessible {
-
     var accessibilityLabel: String? { get set }
 }
 
 public protocol Titleable: AnyObject {
-
     var title: String? { get }
 }
 
 public protocol Placeholderable: AnyObject {
-
     var placeholder: String? { get }
 }
 
 public protocol Tappable: AnyObject {
-
     func specSimulateTap(with event: UIControl.Event)
 }
 
 public extension Tappable {
-
     func specSimulateTap() {
         specSimulateTap(with: .touchUpInside)
     }
 }
 
 public extension UIView {
-
     func specEnter(text: String, intoElementWith placeholder: String) {
         guard let placeholderable: (Placeholderable & TextInsertable) = specFindElement(eval: {
             $0.placeholder == placeholder
@@ -157,7 +150,6 @@ public extension UIView {
 }
 
 extension UIButton: Titleable {
-
     public var title: String? {
         var possibleTitles = [currentTitle, titleLabel?.text]
         if #available(iOS 15.0, *) {
@@ -172,30 +164,25 @@ extension UITextField: Placeholderable, TextInsertable {
 }
 
 extension UIControl: Tappable {
-
     public func specSimulateTap(with event: UIControl.Event) {
         guard isEnabled else {
             return
         }
-        let objectTargets = allTargets.map({ $0 as NSObject })
-
-        for target in objectTargets {
-            let obtainedActions = actions(forTarget: target, forControlEvent: event) ?? []
-
-            for action in obtainedActions {
-                let selector = NSSelectorFromString(action)
-                target.perform(selector, with: self)
+        enumerateEventHandlers { action, tuple, enumerationEvent, b in
+            action?.specTriggerAction()
+            if let tuple = tuple, let target = tuple.0 as? NSObject, enumerationEvent.contains(event) {
+                target.perform(tuple.1, with: self)
             }
         }
     }
 }
 
 extension UIBarButtonItem: Tappable {
-
     public func specSimulateTap(with event: UIControl.Event) {
         guard let target = target, let action = action else {
             if let control = customView as? UIControl {
                 control.specSimulateTap(with: event)
+                
             }
             return
         }
@@ -206,4 +193,16 @@ extension UIBarButtonItem: Tappable {
 
 extension UIView: Accessible {
 
+}
+
+extension UIAction {
+    func specTriggerAction() {
+        let performWithSender = NSSelectorFromString("_performActionWithSender:")
+        let performWithTarget = NSSelectorFromString("_performWithTarget:")
+        if responds(to: performWithSender) {
+            perform(performWithSender, with: self)
+        } else if responds(to: performWithTarget) {
+            perform(performWithTarget, with: self)
+        }
+    }
 }
