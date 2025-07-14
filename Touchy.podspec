@@ -29,8 +29,8 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "8.0"
   s.source       = { :git => "https://github.com/paweldudek/touchy.git", :tag => "#{s.version}" }
 
-  s.source_files  = "Touchy/**/*.swift"
-  s.exclude_files = "TouchyTests/**/*"
+  s.source_files  = "Sources/Touchy/**/*.swift"
+  s.exclude_files = "Tests/**/*"
 
   s.framework  = "UIKit"
 end
