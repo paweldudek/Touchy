@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   s.author             = { "Paweł Dudek" => "pawel@dudek.mobi" }
   s.social_media_url   = "http://twitter.com/eldudi"
 
-  s.platform     = :ios, "8.0"
+  s.platform     = :ios, "16.0"
   s.source       = { :git => "https://github.com/paweldudek/touchy.git", :tag => "#{s.version}" }
 
   s.source_files  = "Sources/Touchy/**/*.swift"

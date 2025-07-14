@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Touchy",
     platforms: [
-        .iOS(.v8)
+        .iOS(.v16),
     ],
     products: [
         .library(
@@ -20,10 +20,16 @@ let package = Package(
         .target(
             name: "Touchy",
             dependencies: [],
-            path: "Sources/Touchy"),
+            path: "Sources/Touchy",
+            linkerSettings: [
+                .linkedFramework("UIKit", .when(platforms: [.iOS]))
+            ]),
         .testTarget(
             name: "TouchyTests",
             dependencies: ["Touchy"],
-            path: "Tests/TouchyTests"),
+            path: "Tests/TouchyTests",
+            linkerSettings: [
+                .linkedFramework("UIKit", .when(platforms: [.iOS]))
+            ]),
     ]
 )
